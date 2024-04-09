@@ -113,6 +113,5 @@ export class GameMap {
 
 	setTileType(node, type) {
 		node.type = type;
-		this.mapRenderer.createRendering(this);
 	}
 }

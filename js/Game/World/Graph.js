@@ -106,6 +106,39 @@ export class Graph {
 		return this.nodes[index];
 	}
 
+	getRandomEmptyTileLeft() {
+		let index = Math.floor(Math.random() * this.nodes.length);
+		while (
+			this.nodes[index].type == TileNode.Type.Obstacle &&
+			index > (1 / 3) * this.nodes.length
+		) {
+			index = Math.floor(Math.random() * this.nodes.length);
+		}
+		return this.nodes[index];
+	}
+
+	getRandomEmptyTileCenter() {
+		let index = Math.floor(Math.random() * this.nodes.length);
+		while (
+			this.nodes[index].type == TileNode.Type.Obstacle &&
+			index < (1 / 3) * this.nodes.length &&
+			index > (2 / 3) * this.nodes.length
+		) {
+			index = Math.floor(Math.random() * this.nodes.length);
+		}
+		return this.nodes[index];
+	}
+
+	getRandomEmptyTileRight() {
+		let index = Math.floor(Math.random() * this.nodes.length);
+		while (
+			this.nodes[index].type == TileNode.Type.Obstacle &&
+			index < (2 / 3) * this.nodes.length
+		) {
+			index = Math.floor(Math.random() * this.nodes.length);
+		}
+		return this.nodes[index];
+	}
 	// Uses BFS to find a tile closest to a location
 	getEmptyTileClosestTo(x0, y0) {
 		let open = [];

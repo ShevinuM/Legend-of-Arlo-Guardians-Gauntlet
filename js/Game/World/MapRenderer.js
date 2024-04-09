@@ -14,10 +14,15 @@ export class MapRenderer {
 		this.startShrineGeometry = new THREE.BoxGeometry(0, 0, 0);
 		this.endShrineGeometry = new THREE.BoxGeometry(0, 0, 0);
 
+		this.swordRetrieved = true;
+
 		// Iterate over all of the
 		// indices in our graph
 		for (let node of this.gameMap.graph.nodes) {
 			if (node.type != TileNode.Type.Ground) {
+				if (node.type == TileNode.Type.Sword) {
+					this.swordRetrieved = false;
+				}
 				this.createTile(node);
 			}
 		}
@@ -28,9 +33,6 @@ export class MapRenderer {
 
 		let obstacleMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
 		let obstacles = new THREE.Mesh(this.obstacleGeometries, obstacleMaterial);
-
-		let swordMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0 });
-		let sword = new THREE.Mesh(this.swordGeometry, swordMaterial);
 
 		let startShrineMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffffff,
@@ -45,9 +47,13 @@ export class MapRenderer {
 
 		let gameObject = new THREE.Group();
 
+		console.log(this.swordRetrieved);
+		let swordMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0 });
+		let sword = new THREE.Mesh(this.swordGeometry, swordMaterial);
+		gameObject.add(sword);
+
 		gameObject.add(ground);
 		gameObject.add(obstacles);
-		gameObject.add(sword);
 		gameObject.add(startShrine);
 		gameObject.add(endShrine);
 

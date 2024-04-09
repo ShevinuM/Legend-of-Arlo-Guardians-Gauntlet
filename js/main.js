@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GameMap } from "./Game/World/GameMap.js";
 import { Character } from "./Game/Behaviour/Character.js";
-import { NPC } from "./Game/Behaviour/NPC.js";
+import { Guardian } from "./Game/Behaviour/Guardian.js";
 import { Player } from "./Game/Behaviour/Player.js";
 import { Controller } from "./Game/Behaviour/Controller.js";
 import { TileNode } from "./Game/World/TileNode.js";
@@ -32,6 +32,11 @@ let gameMap;
 // Player
 let player;
 
+// Guardians
+let guardian;
+let guardian2;
+let guardian3;
+
 // Setup our scene
 function setup() {
 	scene.background = new THREE.Color(0x87ceeb);
@@ -49,15 +54,27 @@ function setup() {
 
 	// Create Player
 	player = new Player(new THREE.Color(0xff0000));
+	guardian = new Guardian(new THREE.Color(0x000000));
+	guardian2 = new Guardian(new THREE.Color(0x000000));
+	guardian3 = new Guardian(new THREE.Color(0x000000));
 
 	// Add the character to the scene
 	scene.add(player.gameObject);
+	scene.add(guardian.gameObject);
+	scene.add(guardian2.gameObject);
+	scene.add(guardian3.gameObject);
 
 	// Get a random starting place for the enemy
 	let startPlayer = gameMap.graph.getEmptyTileClosestTo(0, 0);
+	let startGuardian = gameMap.graph.getRandomEmptyTile();
+	let startGuardian2 = gameMap.graph.getRandomEmptyTile();
+	let startGuardian3 = gameMap.graph.getRandomEmptyTile();
 
 	// this is where we start the player
 	player.location = gameMap.localize(startPlayer);
+	guardian.location = gameMap.localize(startGuardian);
+	guardian2.location = gameMap.localize(startGuardian2);
+	guardian3.location = gameMap.localize(startGuardian3);
 
 	camera.position.set(player.location.x, player.location.y, player.location.z);
 	camera.lookAt(
@@ -80,6 +97,9 @@ function animate() {
 	let deltaTime = clock.getDelta();
 
 	player.update(deltaTime, gameMap, controller);
+	guardian.update(deltaTime, gameMap);
+	guardian2.update(deltaTime, gameMap);
+	guardian3.update(deltaTime, gameMap);
 
 	orbitControls.update();
 	controller.setWorldDirection();
