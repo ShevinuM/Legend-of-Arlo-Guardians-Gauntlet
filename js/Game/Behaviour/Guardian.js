@@ -5,19 +5,19 @@ import { State } from "./State.js";
 
 export class Guardian extends Character {
 	// Character Constructor
-	constructor(mColor) {
+	constructor(mColor, player) {
 		super(mColor);
-		this.state = new WanderState();
-		this.state.enterState(this);
+		this.state = new PatrolState();
+		this.state.enterState(this, player);
 	}
 
-	switchState(state) {
+	switchState(state, player) {
 		this.state = state;
-		this.state.enterState(this);
+		this.state.enterState(this, player);
 	}
 
-	update(deltaTime, gameMap) {
-		this.state.updateState(this, gameMap);
+	update(deltaTime, gameMap, player) {
+		this.state.updateState(this, gameMap, player);
 		super.update(deltaTime, gameMap);
 	}
 
@@ -81,13 +81,37 @@ export class Guardian extends Character {
 	}
 }
 
-export class WanderState extends State {
-	enterState(guardian) {
-		console.log("Guardian is wandering");
+export class PatrolState extends State {
+	enterState(guardian, player) {
+		console.log("Guarding!");
 		guardian.topSpeed = 10;
 	}
 
-	updateState(guardian, gameMap) {
-		guardian.applyForce(guardian.wander());
+	updateState(guardian, gameMap, player) {
+		if (guardian.location.distanceTo(player.location) <= 5) {
+			alert("You have been caught by a guardian! Game Over!");
+			location.reload();
+		} else if (guardian.location.distanceTo(player.location) <= 25) {
+			guardian.switchState(new ChaseState(), player);
+		} else {
+			guardian.applyForce(guardian.wander());
+		}
+	}
+}
+
+export class ChaseState extends State {
+	enterState(guardian, player) {
+		console.log("Chasing");
+	}
+
+	updateState(guardian, gameMap, player) {
+		if (guardian.location.distanceTo(player.location) <= 5) {
+			alert("You have been caught by a guardian! Game Over!");
+			location.reload();
+		} else if (player.location.distanceTo(guardian.location) > 50) {
+			guardian.switchState(new PatrolState(), player);
+		} else {
+			guardian.applyForce(guardian.seek(player.location));
+		}
 	}
 }

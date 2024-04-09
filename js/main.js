@@ -54,9 +54,9 @@ function setup() {
 
 	// Create Player
 	player = new Player(new THREE.Color(0xff0000));
-	guardian = new Guardian(new THREE.Color(0x000000));
-	guardian2 = new Guardian(new THREE.Color(0x000000));
-	guardian3 = new Guardian(new THREE.Color(0x000000));
+	guardian = new Guardian(new THREE.Color(0x000000), player);
+	guardian2 = new Guardian(new THREE.Color(0x000000), player);
+	guardian3 = new Guardian(new THREE.Color(0x000000), player);
 
 	// Add the character to the scene
 	scene.add(player.gameObject);
@@ -97,9 +97,9 @@ function animate() {
 	let deltaTime = clock.getDelta();
 
 	player.update(deltaTime, gameMap, controller);
-	guardian.update(deltaTime, gameMap);
-	guardian2.update(deltaTime, gameMap);
-	guardian3.update(deltaTime, gameMap);
+	guardian.update(deltaTime, gameMap, player);
+	guardian2.update(deltaTime, gameMap, player);
+	guardian3.update(deltaTime, gameMap, player);
 
 	orbitControls.update();
 	controller.setWorldDirection();
