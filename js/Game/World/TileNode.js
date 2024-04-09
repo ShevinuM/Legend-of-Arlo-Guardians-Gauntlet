@@ -21,7 +21,7 @@ export class TileNode {
 
 	// Try to add an edge to this node
 	tryAddEdge(node, cost) {
-		if (node.type === TileNode.Type.Ground) {
+		if (node.type !== TileNode.Type.Obstacle) {
 			this.edges.push({ node: node, cost: cost });
 		}
 	}

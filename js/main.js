@@ -55,7 +55,6 @@ function setup() {
 
 	// Get a random starting place for the enemy
 	let startPlayer = gameMap.graph.getEmptyTileClosestTo(0, 0);
-	console.log(startPlayer);
 
 	// this is where we start the player
 	player.location = gameMap.localize(startPlayer);

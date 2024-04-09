@@ -65,7 +65,7 @@ export class Graph {
 				let index = j * this.cols + i;
 				let current = this.nodes[index];
 
-				if (current.type != TileNode.Type.Obstacle) {
+				if (current.type !== TileNode.Type.Obstacle) {
 					if (i > 0) {
 						// CREATE A WEST EDGE
 						let west = this.nodes[index - 1];
@@ -108,11 +108,9 @@ export class Graph {
 
 	// Uses BFS to find a tile closest to a location
 	getEmptyTileClosestTo(x0, y0) {
-		console.log(x0, y0);
 		let open = [];
 		let closed = new Set();
 		let current = this.getNode(x0, y0);
-		console.log(current);
 		open.push(current);
 		while (current && current.type == TileNode.Type.Obstacle) {
 			if (closed.has(current)) {
