@@ -145,7 +145,10 @@ export class Graph {
 		let closed = new Set();
 		let current = this.getNode(x0, y0);
 		open.push(current);
-		while (current && current.type == TileNode.Type.Obstacle) {
+		while (
+			current &&
+			(current.type == TileNode.Type.Obstacle || current.edges.length < 2)
+		) {
 			if (closed.has(current)) {
 				current = open.shift();
 				continue;
@@ -167,6 +170,7 @@ export class Graph {
 			}
 			current = open.shift();
 		}
+		console.log(`edges -> ${current.edges.length}`);
 		return current;
 	}
 }
