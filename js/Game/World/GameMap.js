@@ -18,6 +18,8 @@ export class GameMap {
 		// for our tile based map
 		this.tileSize = 5;
 
+		this.gameOver = false;
+
 		// Get our columns and rows based on
 		// width, depth and tile size
 		this.cols = this.width / this.tileSize;

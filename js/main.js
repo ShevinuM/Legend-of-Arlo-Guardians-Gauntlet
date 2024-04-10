@@ -37,6 +37,11 @@ let guardian;
 let guardian2;
 let guardian3;
 
+// Skywatchers
+let skywatcher;
+let skywatcher2;
+let skywatcher3;
+
 // Setup our scene
 function setup() {
 	scene.background = new THREE.Color(0x87ceeb);
@@ -58,23 +63,39 @@ function setup() {
 	guardian2 = new Guardian(new THREE.Color(0x000000), player);
 	guardian3 = new Guardian(new THREE.Color(0x000000), player);
 
+	skywatcher = new Guardian(new THREE.Color(0xffc0cb), player);
+	skywatcher2 = new Guardian(new THREE.Color(0xffc0cb), player);
+	skywatcher3 = new Guardian(new THREE.Color(0xffc0cb), player);
+
 	// Add the character to the scene
 	scene.add(player.gameObject);
 	scene.add(guardian.gameObject);
 	scene.add(guardian2.gameObject);
 	scene.add(guardian3.gameObject);
+	scene.add(skywatcher.gameObject);
+	scene.add(skywatcher2.gameObject);
+	scene.add(skywatcher3.gameObject);
 
 	// Get a random starting place for the enemy
-	let startPlayer = gameMap.graph.getEmptyTileClosestTo(0, 0);
+	let startPlayer = gameMap.graph.startShrineNode;
 	let startGuardian = gameMap.graph.getRandomEmptyTile();
 	let startGuardian2 = gameMap.graph.getRandomEmptyTile();
 	let startGuardian3 = gameMap.graph.getRandomEmptyTile();
+	let startSkyWatcher = gameMap.graph.getRandomEmptyTile();
+	let startSkyWatcher2 = gameMap.graph.getRandomEmptyTile();
+	let startSkyWatcher3 = gameMap.graph.getRandomEmptyTile();
 
 	// this is where we start the player
 	player.location = gameMap.localize(startPlayer);
 	guardian.location = gameMap.localize(startGuardian);
 	guardian2.location = gameMap.localize(startGuardian2);
 	guardian3.location = gameMap.localize(startGuardian3);
+	skywatcher.location = gameMap.localize(startSkyWatcher);
+	skywatcher.location.y = 30;
+	skywatcher2.location = gameMap.localize(startSkyWatcher2);
+	skywatcher2.location.y = 30;
+	skywatcher3.location = gameMap.localize(startSkyWatcher3);
+	skywatcher3.location.y = 30;
 
 	camera.position.set(player.location.x, player.location.y, player.location.z);
 	camera.lookAt(
@@ -100,6 +121,9 @@ function animate() {
 	guardian.update(deltaTime, gameMap, player);
 	guardian2.update(deltaTime, gameMap, player);
 	guardian3.update(deltaTime, gameMap, player);
+	skywatcher.update(deltaTime, gameMap, player);
+	skywatcher2.update(deltaTime, gameMap, player);
+	skywatcher3.update(deltaTime, gameMap, player);
 
 	orbitControls.update();
 	controller.setWorldDirection();

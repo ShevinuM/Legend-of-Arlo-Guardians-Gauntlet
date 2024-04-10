@@ -3,11 +3,10 @@ import { VectorUtil } from "../../Util/VectorUtil.js";
 import { Character } from "./Character.js";
 import { State, PatrolState, ChaseState } from "./State.js";
 
-export class Guardian extends Character {
+export class Skywatcher extends Character {
 	// Character Constructor
 	constructor(mColor, player) {
 		super(mColor);
-		this.yOffset = 0;
 		this.state = new PatrolState();
 		this.state.enterState(this, player);
 	}
