@@ -32,6 +32,8 @@ export class PatrolState extends State {
 			gameMap.gameOver = true;
 			location.reload();
 			alert("You have been caught by a guardian! Game Over!");
+		} else if (player.foundSword) {
+			guardian.switchState(new goToEndShrineState(), player);
 		} else if (guardian.location.distanceTo(player.location) <= 50) {
 			guardian.switchState(new ChaseState(), player);
 		} else {
@@ -53,6 +55,8 @@ export class ChaseState extends State {
 			gameMap.gameOver = true;
 			location.reload();
 			alert("You have been caught by a guardian! Game Over!");
+		} else if (player.foundSword) {
+			guardian.switchState(new goToEndShrineState(), player);
 		} else if (player.location.distanceTo(guardian.location) > 50) {
 			guardian.switchState(new PatrolState(), player);
 		} else {

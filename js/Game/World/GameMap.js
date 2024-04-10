@@ -116,4 +116,71 @@ export class GameMap {
 	setTileType(node, type) {
 		node.type = type;
 	}
+
+	manhattanDistance(node, end) {
+		const n = this.localize(node);
+		const e = this.localize(end);
+		const dx = Math.abs(n.x - e.x);
+		const dz = Math.abs(n.z - e.z);
+		return dx + dz;
+	}
+
+	astar(startIndex, endIndex) {
+		const closed = new Set();
+		const open = new PriorityQueue();
+
+		const start = this.graph[startIndex];
+		const end = this.graph[endIndex];
+
+		const parent = [];
+		const costs = [];
+
+		open.enqueue(start, 0);
+
+		for (let node of this.graph) {
+			costs[node.id] = node == start ? 0 : Infinity;
+			parent[node.id] = null;
+		}
+
+		while (!open.isEmpty()) {
+			const current = open.dequeue();
+
+			closed.add(current);
+
+			if (current == end) {
+				return this.backtrack(start, end, parent);
+			}
+
+			for (let edge of current.edges) {
+				if (!closed.has(edge.node)) {
+					const newCost = costs[current.id] + edge.cost;
+					const heuristic = this.manhattanDistance(edge.node, end);
+					if (!open.includes(edge.node)) {
+						open.enqueue(edge.node, newCost + heuristic);
+						parent[edge.node.id] = current;
+						costs[edge.node.id] = newCost + heuristic;
+					} else {
+						if (costs[edge.node.id] > newCost) {
+							open.remove(edge.node);
+							parent[edge.node.id] = current;
+							costs[edge.node.id] = newCost + heuristic;
+							open.enqueue(edge.node, newCost + heuristic);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	backtrack(start, end, parents) {
+		let node = end;
+		let path = [];
+		path.push(node);
+		while (node != start) {
+			if (node == null) return;
+			path.push(parents[node.id]);
+			node = parents[node.id];
+		}
+		return path.reverse();
+	}
 }
