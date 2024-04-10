@@ -59,13 +59,13 @@ function setup() {
 
 	// Create Player
 	player = new Player(new THREE.Color(0xff0000));
-	guardian = new Guardian(new THREE.Color(0x000000), player);
-	guardian2 = new Guardian(new THREE.Color(0x000000), player);
-	guardian3 = new Guardian(new THREE.Color(0x000000), player);
+	guardian = new Guardian(new THREE.Color(0x000000), player, gameMap);
+	guardian2 = new Guardian(new THREE.Color(0x000000), player, gameMap);
+	guardian3 = new Guardian(new THREE.Color(0x000000), player, gameMap);
 
-	skywatcher = new Guardian(new THREE.Color(0xffc0cb), player);
-	skywatcher2 = new Guardian(new THREE.Color(0xffc0cb), player);
-	skywatcher3 = new Guardian(new THREE.Color(0xffc0cb), player);
+	skywatcher = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	skywatcher2 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	skywatcher3 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
 
 	// Add the character to the scene
 	scene.add(player.gameObject);

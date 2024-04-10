@@ -118,55 +118,175 @@ export class GameMap {
 	}
 
 	manhattanDistance(node, end) {
-		const n = this.localize(node);
-		const e = this.localize(end);
-		const dx = Math.abs(n.x - e.x);
-		const dz = Math.abs(n.z - e.z);
+		let nodePos = this.localize(node);
+		let endPos = this.localize(end);
+
+		let dx = Math.abs(nodePos.x - endPos.x);
+		let dz = Math.abs(nodePos.z - endPos.z);
 		return dx + dz;
 	}
 
-	astar(startIndex, endIndex) {
-		const closed = new Set();
-		const open = new PriorityQueue();
+	jps(start, end) {
+		let open = new PriorityQueue();
+		let closed = [];
 
-		const start = this.graph[startIndex];
-		const end = this.graph[endIndex];
+		let parents = new Map();
+		let g = new Map();
 
-		const parent = [];
-		const costs = [];
-
+		g.set(start, 0);
 		open.enqueue(start, 0);
 
-		for (let node of this.graph) {
-			costs[node.id] = node == start ? 0 : Infinity;
-			parent[node.id] = null;
-		}
-
+		console.log(`open -> ${open}`);
 		while (!open.isEmpty()) {
-			const current = open.dequeue();
+			let node = open.dequeue();
+			console.log(node);
+			closed.push(node);
 
-			closed.add(current);
-
-			if (current == end) {
-				return this.backtrack(start, end, parent);
+			if (node == end) {
+				return this.backtrack(start, end, parents);
 			}
 
-			for (let edge of current.edges) {
-				if (!closed.has(edge.node)) {
-					const newCost = costs[current.id] + edge.cost;
-					const heuristic = this.manhattanDistance(edge.node, end);
-					if (!open.includes(edge.node)) {
-						open.enqueue(edge.node, newCost + heuristic);
-						parent[edge.node.id] = current;
-						costs[edge.node.id] = newCost + heuristic;
-					} else {
-						if (costs[edge.node.id] > newCost) {
-							open.remove(edge.node);
-							parent[edge.node.id] = current;
-							costs[edge.node.id] = newCost + heuristic;
-							open.enqueue(edge.node, newCost + heuristic);
-						}
-					}
+			this.identifySuccessors(node, end, open, closed, parents, g);
+		}
+
+		console.log(`No Path found`);
+		return null;
+	}
+
+	getNeighbours(node, parents) {
+		let neighbours = [];
+		let parent = parents.get(node);
+
+		if (parent == null) {
+			for (let e of node.edges) {
+				neighbours.push(e.node);
+			}
+		} else {
+			// These always need to be -1, 0, 1
+			let dx = node.x - parent.x;
+			let dz = node.z - parent.z;
+
+			if (dx != 0) {
+				dx = dx / Math.abs(dx);
+
+				if (node.hasEdgeTo(node.x + dx, node.z)) {
+					neighbours.push(this.graph.getNode(node.x + dx, node.z));
+				}
+
+				if (node.hasEdgeTo(node.x, node.z + 1)) {
+					neighbours.push(this.graph.getNode(node.x, node.z + 1));
+				}
+
+				if (node.hasEdgeTo(node.x, node.z - 1)) {
+					neighbours.push(this.graph.getNode(node.x, node.z - 1));
+				}
+			} else if (dz != 0) {
+				dz = dz / Math.abs(dz);
+
+				if (node.hasEdgeTo(node.x, node.z + dz)) {
+					neighbours.push(this.graph.getNode(node.x, node.z + dz));
+				}
+
+				if (node.hasEdgeTo(node.x + 1, node.z)) {
+					neighbours.push(this.graph.getNode(node.x + 1, node.z));
+				}
+
+				if (node.hasEdgeTo(node.x - 1, node.z)) {
+					neighbours.push(this.graph.getNode(node.x - 1, node.z));
+				}
+			}
+		}
+		return neighbours;
+	}
+
+	jump(neighbour, current, end) {
+		if (neighbour == null || !current.hasEdge(neighbour)) {
+			return null;
+		}
+		if (end == neighbour) {
+			return neighbour;
+		}
+
+		let dx = neighbour.x - current.x;
+		let dz = neighbour.z - current.z;
+
+		// This means we are traversing along the horizontal
+		if (dx != 0) {
+			if (
+				(neighbour.hasEdgeTo(neighbour.x, neighbour.z + 1) &&
+					!current.hasEdgeTo(current.x, current.z + 1)) ||
+				(neighbour.hasEdgeTo(neighbour.x, neighbour.z - 1) &&
+					!current.hasEdgeTo(current.x, current.z - 1))
+			) {
+				return neighbour;
+			}
+		} else if (dz != 0) {
+			if (
+				(neighbour.hasEdgeTo(neighbour.x + 1, neighbour.z) &&
+					!current.hasEdgeTo(current.x + 1, current.z)) ||
+				(neighbour.hasEdgeTo(neighbour.x - 1, neighbour.z) &&
+					!current.hasEdgeTo(current.x - 1, current.z))
+			) {
+				return neighbour;
+			}
+
+			if (
+				this.jump(
+					this.graph.getNode(neighbour.x + 1, neighbour.z),
+					neighbour,
+					end
+				) != null ||
+				this.jump(
+					this.graph.getNode(neighbour.x - 1, neighbour.z),
+					neighbour,
+					end
+				) != null
+			) {
+				return neighbour;
+			}
+		} else {
+			return null;
+		}
+
+		return this.jump(
+			this.graph.getNode(neighbour.x + dx, neighbour.z + dz),
+			neighbour,
+			end
+		);
+	}
+
+	identifySuccessors(node, end, open, closed, parents, g) {
+		let neighbours = this.getNeighbours(node, parents);
+		console.log(neighbours);
+
+		for (let neighbour of neighbours) {
+			let jumpNode = this.jump(neighbour, node, end);
+
+			if (jumpNode == null || closed.includes(jumpNode)) {
+				continue;
+			}
+
+			let d = this.manhattanDistance(node, jumpNode);
+
+			let fromNodeG = Number.MAX_VALUE;
+			if (g.has(node)) {
+				fromNodeG = g.get(node);
+			}
+			fromNodeG = fromNodeG + d;
+
+			let jumpG = Number.MAX_VALUE;
+			if (g.has(jumpNode)) {
+				jumpG = g.get(jumpNode);
+			}
+
+			if (!open.includes(jumpNode) || fromNodeG < jumpG) {
+				g.set(jumpNode, fromNodeG);
+				parents.set(jumpNode, node);
+
+				let f = g.get(jumpNode) + this.manhattanDistance(jumpNode, end);
+
+				if (!open.includes(jumpNode)) {
+					open.enqueue(jumpNode, f);
 				}
 			}
 		}
@@ -177,9 +297,8 @@ export class GameMap {
 		let path = [];
 		path.push(node);
 		while (node != start) {
-			if (node == null) return;
-			path.push(parents[node.id]);
-			node = parents[node.id];
+			path.push(parents.get(node));
+			node = parents.get(node);
 		}
 		return path.reverse();
 	}

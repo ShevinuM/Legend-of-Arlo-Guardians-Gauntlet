@@ -5,20 +5,20 @@ import { State, PatrolState, ChaseState } from "./State.js";
 
 export class Guardian extends Character {
 	// Character Constructor
-	constructor(mColor, player) {
+	constructor(mColor, player, gameMap) {
 		super(mColor);
 		this.yOffset = 0;
 		this.state = new PatrolState();
-		this.state.enterState(this, player);
+		this.state.enterState(this, player, gameMap);
 	}
 
-	switchState(state, player) {
+	switchState(state, player, gameMap) {
 		this.state = state;
-		this.state.enterState(this, player);
+		this.state.enterState(this, player, gameMap);
 	}
 
 	update(deltaTime, gameMap, player) {
-		this.state.updateState(this, gameMap, player);
+		this.state.updateState(this, gameMap, player, deltaTime);
 		super.update(deltaTime, gameMap);
 	}
 
