@@ -145,15 +145,34 @@ export class Graph {
 		let closed = new Set();
 		let current = this.getNode(x0, y0);
 		open.push(current);
-		while (
-			current &&
-			(current.type == TileNode.Type.Obstacle || current.edges.length < 2)
-		) {
+		while (open.length > 0) {
+			current = open.shift();
 			if (closed.has(current)) {
-				current = open.shift();
 				continue;
 			}
 			closed.add(current);
+			if (current.type == TileNode.Type.Ground) {
+				let noGround = 0;
+				for (let i = -1; i <= 1; i++) {
+					for (let j = -1; j <= 1; j++) {
+						if (i == 0 && j == 0) {
+							continue;
+						}
+						let x = current.x + i;
+						let z = current.z + j;
+						if (x < 0 || x >= this.cols || z < 0 || z >= this.rows) {
+							continue;
+						}
+						let node = this.getNode(x, z);
+						if (node.type == TileNode.Type.Ground) {
+							noGround++;
+						}
+					}
+				}
+				if (noGround >= 8) {
+					break;
+				}
+			}
 			for (let i = -1; i <= 1; i++) {
 				for (let j = -1; j <= 1; j++) {
 					if (i == 0 && j == 0) {
@@ -168,7 +187,6 @@ export class Graph {
 					open.push(node);
 				}
 			}
-			current = open.shift();
 		}
 		console.log(`edges -> ${current.edges.length}`);
 		return current;
