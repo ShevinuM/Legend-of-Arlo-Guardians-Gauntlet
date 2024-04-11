@@ -34,6 +34,14 @@ export class Guardian extends Character {
 		return steer;
 	}
 
+	pursue(character, time) {
+		let prediction = new THREE.Vector3(0, 0, 0);
+		prediction.addScaledVector(character.velocity, time);
+		prediction.add(character.location);
+
+		return this.seek(prediction);
+	}
+
 	// Arrive steering behaviour
 	arrive(target, radius) {
 		let desired = VectorUtil.sub(target, this.location);

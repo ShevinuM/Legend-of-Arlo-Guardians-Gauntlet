@@ -8,6 +8,15 @@ import { Controller } from "./Game/Behaviour/Controller.js";
 import { TileNode } from "./Game/World/TileNode.js";
 import { Resources } from "./Util/Resources.js";
 
+// Models
+let files = [
+	{ name: "Arlo", url: "./public/models/Arlo.glb" },
+	{ name: "Guardian", url: "./public/models/Guardian.glb" },
+	{ name: "SkyWatcher", url: "./public/models/Drone.glb" },
+];
+const resources = new Resources(files);
+await resources.loadAll();
+
 // Create Scene
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -59,13 +68,20 @@ function setup() {
 
 	// Create Player
 	player = new Player(new THREE.Color(0xff0000));
+	player.setModel(resources.get("Arlo"));
 	guardian = new Guardian(new THREE.Color(0x000000), player, gameMap);
+	guardian.setModel(resources.get("Guardian"));
 	guardian2 = new Guardian(new THREE.Color(0x000000), player, gameMap);
+	guardian2.setModel(resources.get("Guardian"));
 	guardian3 = new Guardian(new THREE.Color(0x000000), player, gameMap);
+	guardian3.setModel(resources.get("Guardian"));
 
 	skywatcher = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	skywatcher.setModel(resources.get("SkyWatcher"));
 	skywatcher2 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	skywatcher2.setModel(resources.get("SkyWatcher"));
 	skywatcher3 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	skywatcher3.setModel(resources.get("SkyWatcher"));
 
 	// Add the character to the scene
 	scene.add(player.gameObject);

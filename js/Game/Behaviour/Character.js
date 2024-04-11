@@ -4,7 +4,7 @@ import { VectorUtil } from "../../Util/VectorUtil.js";
 export class Character {
 	// Character Constructor
 	constructor(mColor) {
-		this.size = 4;
+		this.size = 5;
 
 		// Create our cone geometry and material
 		let coneGeo = new THREE.ConeGeometry(this.size / 2, this.size, 10);

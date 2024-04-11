@@ -62,7 +62,7 @@ export class ChaseState extends State {
 		} else if (player.location.distanceTo(guardian.location) > 50) {
 			guardian.switchState(new PatrolState(), player, gameMap);
 		} else {
-			guardian.applyForce(guardian.seek(player.location));
+			guardian.applyForce(guardian.pursue(player.location, 6));
 		}
 	}
 }
@@ -91,10 +91,14 @@ export class goToEndShrineState extends State {
 				this.path.shift();
 			}
 
-			if (this.path.length > 0) {
+			if (this.path.length > 1) {
 				nextNode = this.path[0];
 
 				let steer = guardian.seek(gameMap.localize(nextNode));
+				guardian.applyForce(steer);
+			} else if (this.path.length > 0) {
+				nextNode = this.path[0];
+				let steer = guardian.arrive(gameMap.localize(nextNode), 20);
 				guardian.applyForce(steer);
 			}
 		}
