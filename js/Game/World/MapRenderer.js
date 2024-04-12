@@ -1,6 +1,14 @@
 import * as THREE from "three";
 import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
 import { TileNode } from "./TileNode.js";
+import { Resources } from "../../Util/Resources.js";
+
+// Models
+let files = [
+	{ name: "StartShrine", url: "../../../public/models/TempleEnter.glb" },
+];
+const resources = new Resources(files);
+await resources.loadAll();
 
 export class MapRenderer {
 	constructor() {}
@@ -16,8 +24,7 @@ export class MapRenderer {
 
 		this.swordRetrieved = true;
 
-		// Iterate over all of the
-		// indices in our graph
+		// Iterate over all of the indices in our graph
 		for (let node of this.gameMap.graph.nodes) {
 			if (node.type != TileNode.Type.Ground) {
 				if (node.type == TileNode.Type.Sword) {
@@ -35,7 +42,7 @@ export class MapRenderer {
 		let obstacles = new THREE.Mesh(this.obstacleGeometries, obstacleMaterial);
 
 		let startShrineMaterial = new THREE.MeshStandardMaterial({
-			color: 0xffffff,
+			color: 0xff0000,
 		});
 		let startShrine = new THREE.Mesh(
 			this.startShrineGeometry,
@@ -47,14 +54,12 @@ export class MapRenderer {
 
 		let gameObject = new THREE.Group();
 
-		console.log(this.swordRetrieved);
 		let swordMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0 });
 		let sword = new THREE.Mesh(this.swordGeometry, swordMaterial);
 		gameObject.add(sword);
 
 		gameObject.add(ground);
 		gameObject.add(obstacles);
-		gameObject.add(startShrine);
 		gameObject.add(endShrine);
 
 		return gameObject;
@@ -95,11 +100,6 @@ export class MapRenderer {
 		} else if (node.type === TileNode.Type.Sword) {
 			this.swordGeometry = BufferGeometryUtils.mergeGeometries([
 				this.swordGeometry,
-				geometry,
-			]);
-		} else if (node.type === TileNode.Type.Enter) {
-			this.startShrineGeometry = BufferGeometryUtils.mergeGeometries([
-				this.startShrineGeometry,
 				geometry,
 			]);
 		} else if (node.type === TileNode.Type.Exit) {

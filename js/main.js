@@ -7,12 +7,14 @@ import { Player } from "./Game/Behaviour/Player.js";
 import { Controller } from "./Game/Behaviour/Controller.js";
 import { TileNode } from "./Game/World/TileNode.js";
 import { Resources } from "./Util/Resources.js";
+import { GameObject } from "./Game/Static-Objects/Object.js";
 
 // Models
 let files = [
 	{ name: "Arlo", url: "./public/models/Arlo.glb" },
 	{ name: "Guardian", url: "./public/models/Guardian.glb" },
 	{ name: "SkyWatcher", url: "./public/models/Drone.glb" },
+	{ name: "StartShrine", url: "./public/models/TempleEnter.glb" },
 ];
 const resources = new Resources(files);
 await resources.loadAll();
@@ -51,6 +53,9 @@ let skywatcher;
 let skywatcher2;
 let skywatcher3;
 
+// Shrines
+let startShrine;
+
 // Setup our scene
 function setup() {
 	scene.background = new THREE.Color(0x87ceeb);
@@ -69,19 +74,24 @@ function setup() {
 	// Create Player
 	player = new Player(new THREE.Color(0xff0000));
 	player.setModel(resources.get("Arlo"));
+
+	// Create Guardians
 	guardian = new Guardian(new THREE.Color(0x000000), player, gameMap);
 	guardian.setModel(resources.get("Guardian"));
 	guardian2 = new Guardian(new THREE.Color(0x000000), player, gameMap);
 	guardian2.setModel(resources.get("Guardian"));
 	guardian3 = new Guardian(new THREE.Color(0x000000), player, gameMap);
 	guardian3.setModel(resources.get("Guardian"));
-
 	skywatcher = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
 	skywatcher.setModel(resources.get("SkyWatcher"));
 	skywatcher2 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
 	skywatcher2.setModel(resources.get("SkyWatcher"));
 	skywatcher3 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
 	skywatcher3.setModel(resources.get("SkyWatcher"));
+
+	// Create Shrines
+	startShrine = new GameObject(new THREE.Color(0xffffff));
+	startShrine.setModel(resources.get("StartShrine"));
 
 	// Add the character to the scene
 	scene.add(player.gameObject);
@@ -91,6 +101,7 @@ function setup() {
 	scene.add(skywatcher.gameObject);
 	scene.add(skywatcher2.gameObject);
 	scene.add(skywatcher3.gameObject);
+	scene.add(startShrine.gameObject);
 
 	// Get a random starting place for the enemy
 	let startPlayer = gameMap.graph.startShrineNode;
@@ -100,6 +111,8 @@ function setup() {
 	let startSkyWatcher = gameMap.graph.getRandomEmptyTile();
 	let startSkyWatcher2 = gameMap.graph.getRandomEmptyTile();
 	let startSkyWatcher3 = gameMap.graph.getRandomEmptyTile();
+	let startStartShrine = gameMap.graph.startShrineNode;
+	console.log(`start Shrine -> ${startStartShrine}`);
 
 	// this is where we start the player
 	player.location = gameMap.localize(startPlayer);
@@ -112,14 +125,15 @@ function setup() {
 	skywatcher2.location.y = 30;
 	skywatcher3.location = gameMap.localize(startSkyWatcher3);
 	skywatcher3.location.y = 30;
-
-	camera.position.set(player.location.x, player.location.y, player.location.z);
-	camera.lookAt(
-		player.gameObject.position.x,
-		player.gameObject.position.y,
-		player.gameObject.position.z
+	startShrine.location = gameMap.localize(startStartShrine);
+	startShrine.gameObject.position.set(
+		startShrine.location.x,
+		startShrine.location.y,
+		startShrine.location.z
 	);
 
+	camera.position.set(0, 245, 0);
+	camera.rotation.x = Math.PI;
 	scene.add(gameMap.gameObject);
 
 	//First call to animate
@@ -140,7 +154,6 @@ function animate() {
 	skywatcher.update(deltaTime, gameMap, player);
 	skywatcher2.update(deltaTime, gameMap, player);
 	skywatcher3.update(deltaTime, gameMap, player);
-
 	orbitControls.update();
 	controller.setWorldDirection();
 }
