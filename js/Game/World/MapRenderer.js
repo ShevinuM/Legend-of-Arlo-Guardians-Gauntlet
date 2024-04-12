@@ -10,6 +10,13 @@ let files = [
 const resources = new Resources(files);
 await resources.loadAll();
 
+const obstacleTexture = new THREE.TextureLoader().load(
+	"../../../public/assets/crate.png"
+);
+const grassTexture = new THREE.TextureLoader().load(
+	"../../../public/assets/Grass.png"
+);
+
 export class MapRenderer {
 	constructor() {}
 
@@ -31,14 +38,18 @@ export class MapRenderer {
 					this.swordRetrieved = false;
 				}
 				this.createTile(node);
+			} else {
+				this.createTileGround(node);
 			}
 		}
 
-		let groundMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
 		let groundGeometry = this.makeGroundGeometry();
-		let ground = new THREE.Mesh(groundGeometry, groundMaterial);
+		let groundMaterial = new THREE.MeshStandardMaterial({ map: grassTexture });
+		let ground = new THREE.Mesh(this.groundGeometries, groundMaterial);
 
-		let obstacleMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+		let obstacleMaterial = new THREE.MeshStandardMaterial({
+			map: obstacleTexture,
+		});
 		let obstacles = new THREE.Mesh(this.obstacleGeometries, obstacleMaterial);
 
 		let startShrineMaterial = new THREE.MeshStandardMaterial({
@@ -72,9 +83,9 @@ export class MapRenderer {
 		return geometry;
 	}
 
-	createTile(node) {
+	createTileGround(node) {
 		let x = node.x * this.gameMap.tileSize + this.gameMap.start.x;
-		let y = this.gameMap.tileSize;
+		let y = 0;
 		let z = node.z * this.gameMap.tileSize + this.gameMap.start.z;
 
 		let height = this.gameMap.tileSize * 2;
@@ -86,7 +97,30 @@ export class MapRenderer {
 		);
 		geometry.translate(
 			x + 0.5 * this.gameMap.tileSize,
-			y + 0.5 * this.gameMap.tileSize,
+			y,
+			z + 0.5 * this.gameMap.tileSize
+		);
+		this.groundGeometries = BufferGeometryUtils.mergeGeometries([
+			this.groundGeometries,
+			geometry,
+		]);
+	}
+
+	createTile(node) {
+		let x = node.x * this.gameMap.tileSize + this.gameMap.start.x;
+		let y = this.gameMap.tileSize * 2;
+		let z = node.z * this.gameMap.tileSize + this.gameMap.start.z;
+
+		let height = this.gameMap.tileSize * 2;
+
+		let geometry = new THREE.BoxGeometry(
+			this.gameMap.tileSize,
+			height,
+			this.gameMap.tileSize
+		);
+		geometry.translate(
+			x + 0.5 * this.gameMap.tileSize,
+			y,
 			z + 0.5 * this.gameMap.tileSize
 		);
 

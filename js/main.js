@@ -24,8 +24,13 @@ let files = [
 const resources = new Resources(files);
 await resources.loadAll();
 
+const background_texture = new THREE.TextureLoader().load(
+	"./public/assets/1.jpg"
+);
+
 // Create Scene
 const scene = new THREE.Scene();
+
 const camera = new THREE.PerspectiveCamera(
 	75,
 	window.innerWidth / window.innerHeight,
@@ -67,7 +72,7 @@ let sword;
 
 // Setup our scene
 function setup() {
-	scene.background = new THREE.Color(0x87ceeb);
+	scene.background = background_texture;
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	document.body.appendChild(renderer.domElement);
 
