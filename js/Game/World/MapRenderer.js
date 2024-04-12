@@ -56,11 +56,9 @@ export class MapRenderer {
 
 		let swordMaterial = new THREE.MeshStandardMaterial({ color: 0xc0c0c0 });
 		let sword = new THREE.Mesh(this.swordGeometry, swordMaterial);
-		gameObject.add(sword);
 
 		gameObject.add(ground);
 		gameObject.add(obstacles);
-		gameObject.add(endShrine);
 
 		return gameObject;
 	}

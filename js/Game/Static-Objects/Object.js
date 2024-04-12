@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export class GameObject {
 	constructor(mColor) {
-		this.size = 10;
+		this.size = 20;
 
 		let boxGeometry = new THREE.BoxGeometry(10, 10, 10);
 		let boxMaterial = new THREE.MeshStandardMaterial({ color: mColor });

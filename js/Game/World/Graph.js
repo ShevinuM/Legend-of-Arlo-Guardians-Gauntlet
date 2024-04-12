@@ -56,6 +56,7 @@ export class Graph {
 			Math.floor(this.rows / 2)
 		);
 		swordNode.type = TileNode.Type.Sword;
+		this.swordNode = swordNode;
 
 		// Create west, east, north, south
 		// edges for each node in our graph
