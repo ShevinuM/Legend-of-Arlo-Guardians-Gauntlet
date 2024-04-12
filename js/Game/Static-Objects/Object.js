@@ -17,7 +17,7 @@ export class GameObject {
 	}
 
 	setModel(model) {
-		model.position.y = model.position.y + 1;
+		model.position.y = model.position.y + 5;
 		var bbox = new THREE.Box3().setFromObject(model);
 		let dz = bbox.max.z - bbox.min.z;
 		let scale = this.size / dz;

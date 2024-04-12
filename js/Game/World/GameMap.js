@@ -9,8 +9,8 @@ import { CellularAutomata } from "./CellularAutomata";
 export class GameMap {
 	// Constructor for our GameMap class
 	constructor() {
-		this.width = 600;
-		this.depth = 280;
+		this.width = 680;
+		this.depth = 350;
 
 		this.start = new THREE.Vector3(-this.width / 2, 0, -this.depth / 2);
 
