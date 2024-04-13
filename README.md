@@ -27,5 +27,3 @@ In an alternate timeline after The Legend of Zelda: Breath of the Wild, Link and
 ## Technologies Used
 
 - JavaScript and Three.js
-
-
