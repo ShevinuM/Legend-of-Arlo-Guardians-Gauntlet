@@ -10,7 +10,6 @@ function showNotification(message) {
 	notification.innerHTML = message;
 	notification.style.display = "block";
 
-	// Hide the notification after 5 seconds
 	document.addEventListener("keydown", function (event) {
 		if (event.key === "x") {
 			let notification = document.getElementById("notification");
@@ -26,8 +25,6 @@ function showNotification(message) {
 }
 
 export class State {
-	// Creating an abstract class in JS
-	// Ensuring enterState and updateState are implemented
 	constructor() {
 		if (this.constructor == State) {
 			throw new Error("Class is of abstract type and cannot be instantiated");

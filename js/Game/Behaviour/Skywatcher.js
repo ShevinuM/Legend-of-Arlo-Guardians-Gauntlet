@@ -21,7 +21,6 @@ export class Skywatcher extends Character {
 		super.update(deltaTime, gameMap);
 	}
 
-	// Seek steering behaviour
 	seek(target) {
 		let desired = new THREE.Vector3();
 		desired.subVectors(target, this.location);
@@ -33,7 +32,6 @@ export class Skywatcher extends Character {
 		return steer;
 	}
 
-	// Arrive steering behaviour
 	arrive(target, radius) {
 		let desired = VectorUtil.sub(target, this.location);
 
@@ -51,7 +49,6 @@ export class Skywatcher extends Character {
 		return steer;
 	}
 
-	// Wander steering behaviour
 	wander() {
 		const d = 10;
 		const r = 10;
@@ -60,14 +57,9 @@ export class Skywatcher extends Character {
 		const v = this.velocity.clone().setLength(d);
 		const futureLocation = this.location.clone().add(v);
 
-		// Math.random() generates a random number between 0 and 1
-		// 2 * Math.PI is 360 degrees in radians
-		// so I am generating a random angle between 0 and 360 degrees
 		if (this.wanderAngle == null) {
 			this.wanderAngle = Math.random() * 2 * Math.PI;
 		} else {
-			// Math.random() * 2 * a generates a random number between 0 and 2a
-			// I then subtract a to get a random number between -a and a
 			this.wanderAngle += Math.random() * 2 * a - a;
 		}
 

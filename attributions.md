@@ -1,1 +1,0 @@
-<a href="https://www.freepik.com/free-vector/realistic-burned-paper-texture_18952706.htm#page=16&query=rpg%20background&position=22&from_view=keyword&track=ais&uuid=5df84505-4910-4759-9699-cc9c0d5e24ae">Image by pikisuperstar</a> on Freepik

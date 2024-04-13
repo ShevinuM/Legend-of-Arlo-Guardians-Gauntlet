@@ -7,45 +7,34 @@ import { VectorUtil } from "../../Util/VectorUtil";
 import { CellularAutomata } from "./CellularAutomata";
 
 export class GameMap {
-	// Constructor for our GameMap class
 	constructor() {
 		this.width = 680;
 		this.depth = 350;
 
 		this.start = new THREE.Vector3(-this.width / 2, 0, -this.depth / 2);
 
-		// We also need to define a tile size
-		// for our tile based map
 		this.tileSize = 5;
 
 		this.gameOver = false;
 
-		// Get our columns and rows based on
-		// width, depth and tile size
 		this.cols = this.width / this.tileSize;
 		this.rows = this.depth / this.tileSize;
 
-		// Create our graph
-		// Which is an array of nodes
 		this.graph = new Graph(this.tileSize, this.cols, this.rows);
 
-		// Create our map renderer
 		this.mapRenderer = new MapRenderer();
 
 		this.sword = null;
 	}
 
-	// initialize the GameMap
 	init(scene) {
 		this.scene = scene;
 
 		this.initGraphByCA();
 
-		// Set the game object to our rendering
 		this.gameObject = this.mapRenderer.createRendering(this);
 	}
 
-	// Method to get location from a node
 	localize(node) {
 		let x = this.start.x + node.x * this.tileSize + this.tileSize * 0.5;
 		let y = this.tileSize;
@@ -54,7 +43,6 @@ export class GameMap {
 		return new THREE.Vector3(x, y, z);
 	}
 
-	// Method to get node from a location
 	quantize(location) {
 		let x = Math.floor((location.x - this.start.x) / this.tileSize);
 		let z = Math.floor((location.z - this.start.z) / this.tileSize);
@@ -211,7 +199,6 @@ export class GameMap {
 		let dx = neighbour.x - current.x;
 		let dz = neighbour.z - current.z;
 
-		// This means we are traversing along the horizontal
 		if (dx != 0) {
 			if (
 				(neighbour.hasEdgeTo(neighbour.x, neighbour.z + 1) &&

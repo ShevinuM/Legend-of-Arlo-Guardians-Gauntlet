@@ -4,7 +4,6 @@ import { Character } from "./Character.js";
 import { State, PatrolState, ChaseState } from "./State.js";
 
 export class Guardian extends Character {
-	// Character Constructor
 	constructor(mColor, player, gameMap) {
 		super(mColor);
 		this.yOffset = 0;
@@ -23,7 +22,6 @@ export class Guardian extends Character {
 		super.update(deltaTime, gameMap);
 	}
 
-	// Seek steering behaviour
 	seek(target) {
 		let desired = new THREE.Vector3();
 		desired.subVectors(target, this.location);
@@ -43,7 +41,6 @@ export class Guardian extends Character {
 		return this.seek(prediction);
 	}
 
-	// Arrive steering behaviour
 	arrive(target, radius) {
 		let desired = VectorUtil.sub(target, this.location);
 
@@ -61,7 +58,6 @@ export class Guardian extends Character {
 		return steer;
 	}
 
-	// Wander steering behaviour
 	wander() {
 		const d = 10;
 		const r = 10;

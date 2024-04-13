@@ -20,7 +20,6 @@ export class Graph {
 		return this.nodes.length;
 	}
 
-	// Initialize our game graph
 	initGraph(grid) {
 		this.nodes = [];
 		// Create a new tile node

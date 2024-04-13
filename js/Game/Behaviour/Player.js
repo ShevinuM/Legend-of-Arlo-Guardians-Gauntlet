@@ -13,7 +13,6 @@ function showNotification(message) {
 	notification.innerHTML = message;
 	notification.style.display = "block";
 
-	// Hide the notification after 5 seconds
 	document.addEventListener("keydown", function (event) {
 		if (event.key === "x") {
 			let notification = document.getElementById("notification");
@@ -34,7 +33,6 @@ export class Player extends Character {
 		this.frictionMagnitude = 20;
 		this.foundSword = false;
 
-		// State
 		this.state = new IdleState();
 
 		this.state.enterState(this);
