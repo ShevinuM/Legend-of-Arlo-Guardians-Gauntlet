@@ -2,6 +2,32 @@ import { Character } from "./Character.js";
 import { State } from "./State";
 import { TileNode } from "../World/TileNode.js";
 
+import { Resources } from "../../Util/Resources.js";
+
+let files = [{ name: "Rock", url: "../../../public/models/Stone.glb" }];
+const resources = new Resources(files);
+await resources.loadAll();
+
+function showNotification(message) {
+	let notification = document.getElementById("notification");
+	notification.innerHTML = message;
+	notification.style.display = "block";
+
+	// Hide the notification after 5 seconds
+	document.addEventListener("keydown", function (event) {
+		if (event.key === "x") {
+			let notification = document.getElementById("notification");
+			notification.style.display = "none";
+		}
+	});
+
+	document.addEventListener("keydown", function (event) {
+		if (event.key === "q") {
+			window.location.reload();
+		}
+	});
+}
+
 export class Player extends Character {
 	constructor(colour) {
 		super(colour);
@@ -51,9 +77,10 @@ export class SearchingForSwordState extends State {
 	updateState(player, controller, gameMap) {
 		let tileNode = gameMap.quantize(player.location);
 		if (tileNode && tileNode.type === TileNode.Type.Sword) {
-			console.log(tileNode.type);
+			gameMap.sword.setModel(resources.get("Rock"));
 			gameMap.setTileType(tileNode, TileNode.Type.Ground);
 			player.switchState(new SearchingForEndShrineState());
+			gameMap.sword.setModel(resources.get("Rock"));
 		} else if (!controller.moving()) {
 			player.switchState(new IdleState());
 		} else {
@@ -67,6 +94,9 @@ export class SearchingForSwordState extends State {
 export class SearchingForEndShrineState extends State {
 	enterState(player) {
 		player.foundSword = true;
+		showNotification(
+			"You've discovered the legendary sword! With it, the guardians of the Shrine are ready to defend it with all their might. Time is of the essence, so make haste! The fate of the Sword rests in your hands!<br><br>Press 'x' to dismiss"
+		);
 		console.log("Entered Searching For End Shrine");
 	}
 
@@ -86,12 +116,13 @@ export class SearchingForEndShrineState extends State {
 
 export class EndGameState extends State {
 	enterState(player) {
-		alert("Game Over");
-
-		setTimeout(function () {
-			location.reload();
-		}, 1000);
+		showNotification(
+			"Hyrulean champion,<br><br>Your triumph in evading the vigilant guardians within the Shrine is commendable. Through your skill and cunning, you have navigated the perils unscathed. Now, the shrine's magic shall whisk you back to the land of Hyrule.<br><br>May the courage and wisdom you've displayed serve you well in your ultimate quest to defeat the malevolent Ganon. Your destiny awaits, and the fate of Hyrule hangs in the balance. Best of luck on your journey.<br><br>Press q to quit"
+		);
+		player.topSpeed = 0;
 	}
 
-	updateState(player, controller, gameMap) {}
+	updateState(player, controller, gameMap) {
+		gameMap.gameOver = true;
+	}
 }

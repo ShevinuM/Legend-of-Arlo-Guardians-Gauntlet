@@ -1,4 +1,29 @@
 import * as THREE from "three";
+import { Resources } from "../../Util/Resources.js";
+
+let files = [{ name: "Rock", url: "../../../public/models/Stone.glb" }];
+const resources = new Resources(files);
+await resources.loadAll();
+
+function showNotification(message) {
+	let notification = document.getElementById("notification");
+	notification.innerHTML = message;
+	notification.style.display = "block";
+
+	// Hide the notification after 5 seconds
+	document.addEventListener("keydown", function (event) {
+		if (event.key === "x") {
+			let notification = document.getElementById("notification");
+			notification.style.display = "none";
+		}
+	});
+
+	document.addEventListener("keydown", function (event) {
+		if (event.key === "q") {
+			window.location.reload();
+		}
+	});
+}
 
 export class State {
 	// Creating an abstract class in JS
@@ -30,8 +55,10 @@ export class PatrolState extends State {
 			guardian.location.distanceTo(player.location) <= 2
 		) {
 			gameMap.gameOver = true;
-			location.reload();
-			alert("You have been caught by a guardian! Game Over!");
+			showNotification(
+				"Your valiant efforts have been thwarted, for a guardian has captured you. In this quest, your journey ends here. The game is over. May your courage inspire future adventurers to rise against the darkness that threatens Hyrule.<br><br>Press q to quit."
+			);
+			player.topSpeed = 0;
 		} else if (guardian.location.distanceTo(player.location) <= 50) {
 			guardian.switchState(new ChaseState(), player, gameMap);
 		} else if (player.foundSword) {
@@ -44,6 +71,7 @@ export class PatrolState extends State {
 
 export class ChaseState extends State {
 	enterState(guardian, player) {
+		guardian.topSpeed = 20;
 		console.log("Chasing");
 	}
 
@@ -53,8 +81,10 @@ export class ChaseState extends State {
 			guardian.location.distanceTo(player.location) <= 2
 		) {
 			gameMap.gameOver = true;
-			location.reload();
-			alert("You have been caught by a guardian! Game Over!");
+			showNotification(
+				"Your valiant efforts have been thwarted, for a guardian has captured you. In this quest, your journey ends here. The game is over. May your courage inspire future adventurers to rise against the darkness that threatens Hyrule.<br><br>Press q to quit."
+			);
+			player.topSpeed = 0;
 		} else if (player.location.distanceTo(guardian.location) <= 50) {
 			guardian.applyForce(guardian.seek(player.location));
 		} else if (player.foundSword) {
@@ -69,6 +99,8 @@ export class ChaseState extends State {
 
 export class goToEndShrineState extends State {
 	enterState(guardian, player, gameMap) {
+		guardian.topSpeed = 20;
+		gameMap.sword.setModel(resources.get("Rock"));
 		console.log("Going To End Shrine");
 		let guardianLoc = guardian.location;
 		let guardianCurrNode = gameMap.quantize(guardianLoc);
@@ -81,8 +113,10 @@ export class goToEndShrineState extends State {
 			guardian.location.distanceTo(player.location) <= 2
 		) {
 			gameMap.gameOver = true;
-			location.reload();
-			alert("You have been caught by a guardian! Game Over!");
+			showNotification(
+				"Your valiant efforts have been thwarted, for a guardian has captured you. In this quest, your journey ends here. The game is over. May your courage inspire future adventurers to rise against the darkness that threatens Hyrule.<br><br>Press q to quit."
+			);
+			player.topSpeed = 0;
 		} else if (guardian.location.distanceTo(player.location) <= 50) {
 			guardian.switchState(new ChaseState(), player, gameMap);
 		} else if (this.path && this.path.length > 0) {

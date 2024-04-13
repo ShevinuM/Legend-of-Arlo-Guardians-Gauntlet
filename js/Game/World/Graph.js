@@ -189,7 +189,6 @@ export class Graph {
 				}
 			}
 		}
-		console.log(`edges -> ${current.edges.length}`);
 		return current;
 	}
 }

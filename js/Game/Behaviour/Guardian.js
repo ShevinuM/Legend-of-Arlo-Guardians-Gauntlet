@@ -8,6 +8,7 @@ export class Guardian extends Character {
 	constructor(mColor, player, gameMap) {
 		super(mColor);
 		this.yOffset = 0;
+		this.topSpeed = 10;
 		this.state = new PatrolState();
 		this.state.enterState(this, player, gameMap);
 	}

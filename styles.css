@@ -1,0 +1,17 @@
+body {
+	height: 100vh;
+	margin: 0;
+}
+
+#notification {
+	font-family: "Syne Mono", monospace;
+	position: absolute;
+	background-image: url("./public/assets/1.jpg");
+	background-size: cover;
+	background-position: center;
+	padding: 20px;
+	display: none;
+	top: 10px;
+	right: 10px;
+	width: 50vw;
+}

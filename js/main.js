@@ -15,7 +15,7 @@ let files = [
 	{ name: "Guardian", url: "./public/models/Guardian.glb" },
 	{ name: "SkyWatcher", url: "./public/models/Drone.glb" },
 	{ name: "StartShrine", url: "./public/models/TempleEnter.glb" },
-	{ name: "Sword", url: "./public/models/SwordintheStone.glb" },
+	{ name: "Sword", url: "./public/models/Chest.glb" },
 	{ name: "AppleTree", url: "./public/models/AppleTree.glb" },
 	{ name: "Bush", url: "./public/models/Bush.glb" },
 	{ name: "Cabin", url: "./public/models/CabinintheWoods.glb" },
@@ -59,9 +59,10 @@ let guardian2;
 let guardian3;
 
 // Skywatchers
-let skywatcher;
-let skywatcher2;
-let skywatcher3;
+let guardian4;
+let guardian5;
+let guardian6;
+let guardian7;
 
 // Shrines
 let startShrine;
@@ -69,6 +70,19 @@ let endShrine;
 
 // Swords
 let sword;
+
+function showNotification(message) {
+	let notification = document.getElementById("notification");
+	notification.innerHTML = message;
+	notification.style.display = "block";
+
+	document.addEventListener("keydown", function (event) {
+		if (event.key.startsWith("x")) {
+			let notification = document.getElementById("notification");
+			notification.style.display = "none";
+		}
+	});
+}
 
 // Setup our scene
 function setup() {
@@ -96,12 +110,14 @@ function setup() {
 	guardian2.setModel(resources.get("Guardian"));
 	guardian3 = new Guardian(new THREE.Color(0x000000), player, gameMap);
 	guardian3.setModel(resources.get("Guardian"));
-	skywatcher = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
-	skywatcher.setModel(resources.get("SkyWatcher"));
-	skywatcher2 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
-	skywatcher2.setModel(resources.get("SkyWatcher"));
-	skywatcher3 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
-	skywatcher3.setModel(resources.get("SkyWatcher"));
+	guardian4 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	guardian4.setModel(resources.get("Guardian"));
+	guardian5 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	guardian5.setModel(resources.get("Guardian"));
+	guardian6 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	guardian6.setModel(resources.get("Guardian"));
+	guardian7 = new Guardian(new THREE.Color(0xffc0cb), player, gameMap);
+	guardian7.setModel(resources.get("Guardian"));
 
 	// Create Shrines
 	startShrine = new GameObject(new THREE.Color(0xffffff));
@@ -113,14 +129,17 @@ function setup() {
 	sword = new GameObject(new THREE.Color(0xffffff));
 	sword.setModel(resources.get("Sword"));
 
+	gameMap.sword = sword;
+
 	// Add the character to the scene
 	scene.add(player.gameObject);
 	scene.add(guardian.gameObject);
 	scene.add(guardian2.gameObject);
 	scene.add(guardian3.gameObject);
-	scene.add(skywatcher.gameObject);
-	scene.add(skywatcher2.gameObject);
-	scene.add(skywatcher3.gameObject);
+	scene.add(guardian4.gameObject);
+	scene.add(guardian5.gameObject);
+	scene.add(guardian6.gameObject);
+	scene.add(guardian7.gameObject);
 	scene.add(startShrine.gameObject);
 	scene.add(endShrine.gameObject);
 	scene.add(sword.gameObject);
@@ -130,9 +149,10 @@ function setup() {
 	let startGuardian = gameMap.graph.getRandomEmptyTile();
 	let startGuardian2 = gameMap.graph.getRandomEmptyTile();
 	let startGuardian3 = gameMap.graph.getRandomEmptyTile();
-	let startSkyWatcher = gameMap.graph.getRandomEmptyTile();
-	let startSkyWatcher2 = gameMap.graph.getRandomEmptyTile();
-	let startSkyWatcher3 = gameMap.graph.getRandomEmptyTile();
+	let startGuardian4 = gameMap.graph.getRandomEmptyTile();
+	let startGuardian5 = gameMap.graph.getRandomEmptyTile();
+	let startGuardian6 = gameMap.graph.getRandomEmptyTile();
+	let startGuardian7 = gameMap.graph.getRandomEmptyTile();
 	let startStartShrine = gameMap.graph.startShrineNode;
 	let startEndShrine = gameMap.graph.endShrineNode;
 	let startSword = gameMap.graph.swordNode;
@@ -141,12 +161,10 @@ function setup() {
 	guardian.location = gameMap.localize(startGuardian);
 	guardian2.location = gameMap.localize(startGuardian2);
 	guardian3.location = gameMap.localize(startGuardian3);
-	skywatcher.location = gameMap.localize(startSkyWatcher);
-	skywatcher.location.y = 30;
-	skywatcher2.location = gameMap.localize(startSkyWatcher2);
-	skywatcher2.location.y = 30;
-	skywatcher3.location = gameMap.localize(startSkyWatcher3);
-	skywatcher3.location.y = 30;
+	guardian4.location = gameMap.localize(startGuardian4);
+	guardian5.location = gameMap.localize(startGuardian5);
+	guardian6.location = gameMap.localize(startGuardian6);
+	guardian7.location = gameMap.localize(startGuardian7);
 	startShrine.location = gameMap.localize(startStartShrine);
 	startShrine.gameObject.position.set(
 		startShrine.location.x,
@@ -165,15 +183,16 @@ function setup() {
 		sword.location.y,
 		sword.location.z
 	);
-	console.log(
-		`sword Loc -> ${sword.location.x}, ${sword.location.y}, ${sword.location.z}`
-	);
 
 	camera.position.set(0, 245, 0);
 	camera.rotation.x = Math.PI;
 	scene.add(gameMap.gameObject);
 
 	//First call to animate
+
+	showNotification(
+		`Greetings, brave adventurer,<br><br>In this grand RPG, you assume the role of Arlo, tasked with a noble quest: to retrieve the Master Sword from the treacherous Guardian's Gauntlet in order to vanquish the malevolent Calamity Ganon. Your journey began when you uncovered the Hidden Shrine in the vast land of Hyrule, a shrine that revealed the path to the Gauntlet.<br><br>Beware, for the Gauntlet is heavily guarded by vigilant guardians who will pursue you relentlessly upon sight. Your goal is to locate and claim the Master Sword, but be warned: once you do, the guardians will be alerted and will hasten to the shrine's location to impede your escape.<br><br>You must race against time and the guardians to reach the shrine before they do. Failure to do so could mean dire consequences for Hyrule, as the darkness of Calamity Ganon may engulf the land forevermore.<br><br>Remember, your father, the legendary hero Link, entrusted you with this vital task. Make each step count, for the fate of Hyrule hangs in the balance.<br><br>Use the arrow keys to navigate Arlo through this perilous journey. Press q to quit the game at any point. Press the down key to begin your adventure and exit the entrance shrine. May the courage of the hero's bloodline guide you to victory!<br><br>Press x to dismiss`
+	);
 	animate();
 }
 
@@ -188,9 +207,10 @@ function animate() {
 	guardian.update(deltaTime, gameMap, player);
 	guardian2.update(deltaTime, gameMap, player);
 	guardian3.update(deltaTime, gameMap, player);
-	skywatcher.update(deltaTime, gameMap, player);
-	skywatcher2.update(deltaTime, gameMap, player);
-	skywatcher3.update(deltaTime, gameMap, player);
+	guardian4.update(deltaTime, gameMap, player);
+	guardian5.update(deltaTime, gameMap, player);
+	guardian6.update(deltaTime, gameMap, player);
+	guardian7.update(deltaTime, gameMap, player);
 	orbitControls.update();
 	controller.setWorldDirection();
 }

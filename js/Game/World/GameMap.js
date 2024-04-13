@@ -31,6 +31,8 @@ export class GameMap {
 
 		// Create our map renderer
 		this.mapRenderer = new MapRenderer();
+
+		this.sword = null;
 	}
 
 	// initialize the GameMap
@@ -79,7 +81,6 @@ export class GameMap {
 		if (this.validate(this.graph)) {
 			return;
 		}
-		console.log("invalid");
 		this.initGraphByCA();
 	}
 
