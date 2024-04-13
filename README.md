@@ -1,6 +1,6 @@
 # Legend of Arlo : The Guardian's Gauntlet
 
-[![Link to the video](http://img.youtube.com/vi/GwHdAy27ecE/0.jpg)](https://www.youtube.com/watch?v=GwHdAy27ecE)
+[![Link to the video](http://img.youtube.com/vi/-gAzguyOJ2w/0.jpg)](https://www.youtube.com/watch?v=-gAzguyOJ2w)
 
 ## Brief Description and Backstory
 
