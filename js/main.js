@@ -13,13 +13,8 @@ import { GameObject } from "./Game/Static-Objects/Object.js";
 let files = [
 	{ name: "Arlo", url: "./public/models/Arlo.glb" },
 	{ name: "Guardian", url: "./public/models/Guardian.glb" },
-	{ name: "SkyWatcher", url: "./public/models/Drone.glb" },
 	{ name: "StartShrine", url: "./public/models/TempleEnter.glb" },
 	{ name: "Sword", url: "./public/models/Chest.glb" },
-	{ name: "AppleTree", url: "./public/models/AppleTree.glb" },
-	{ name: "Bush", url: "./public/models/Bush.glb" },
-	{ name: "Cabin", url: "./public/models/CabinintheWoods.glb" },
-	{ name: "Tree", url: "./public/models/Tree.glb" },
 ];
 const resources = new Resources(files);
 await resources.loadAll();
